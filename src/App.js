@@ -1,17 +1,25 @@
 import React from 'react';
+import styled from 'styled-components'
 
 // Components
 import Header from './Header'
 import WeatherContainer from './Weather/WeatherContainer'
 import Footer from './Footer'
 
-function App() {
+const AppWrapper = styled.div`
+    background-color: grey;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+`;
+
+const App = () => {
   return (
-    <React.Fragment>
+    <AppWrapper>
       <Header />
       <WeatherContainer />
       <Footer />
-    </React.Fragment>
+    </AppWrapper>
   )
 }
 

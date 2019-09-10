@@ -1,7 +1,31 @@
 import React, { Component } from 'react'
+import styled from 'styled-components'
 
 import fetchWeatherCity from '../API/fetchWeatherCity'
 import WeatherDetails from './WeatherDetails'
+
+const WeatherContainerWrapper = styled.div`
+    height: 90%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+
+const Input = styled.input`
+    
+
+`;
+
+const Form = styled.form`
+    margin: 10px;
+`;
+
+const Error = styled.div`
+    background-color: pink;
+    display: flex;
+    justify-content: center;
+`;
 
 class WeatherContainer extends Component {
     constructor() {
@@ -53,24 +77,24 @@ class WeatherContainer extends Component {
         const { handleSubmit, handleChange } = this
 
         return (
-            <div>
-                <form onSubmit={handleSubmit}>
-                    {error || ''}
-                    <input
+            <WeatherContainerWrapper>
+                <Form onSubmit={handleSubmit}>
+                    <Error>{error || ''}</Error>
+                    <Input
                         type='text'
                         placeholder='search for a city here...'
                         value={inputValue}
                         onChange={handleChange}
                     />
-                    <input
+                    <Input
                         type='submit'
                         value='Submit'
                     />
-                </form>
+                </Form>
                 {data &&
                     <WeatherDetails data={data}/>
                 }
-            </div>
+            </WeatherContainerWrapper>
         )
     }
 }

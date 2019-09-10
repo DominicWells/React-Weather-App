@@ -1,10 +1,16 @@
 import React from 'react'
+import styled from 'styled-components'
+
+const FooterWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+`
 
 const Footer = () => {
     return (
-        <div>
+        <FooterWrapper>
             This is the footer.
-        </div>
+        </FooterWrapper>
     )
 }
 

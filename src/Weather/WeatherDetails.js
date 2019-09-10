@@ -1,8 +1,15 @@
 import React from 'react'
+import styled from 'styled-components'
 
 import MyMap from './Map/index'
 import WeatherDesc from './WeatherDesc'
 import WeatherDetailsTable from './WeatherDetailsTable'
+
+const WeatherDetailsWrapper = styled.div`
+    width: 75%;
+    padding: 20px;
+    background-color: #93b2c4;
+`;
 
 const WeatherDetails = ({ data }) => {
 
@@ -12,12 +19,12 @@ const WeatherDetails = ({ data }) => {
         const position = [data.coord.lat,data.coord.lon]
 
         return (
-                <div>
+                <WeatherDetailsWrapper>
                     <img width={100} height={100} alt='weather-icon' src={`https://api.openweathermap.org/img/w/${icon}.png`} />
                     <WeatherDesc weather={data.weather} location={data.name} />
                     <MyMap position={position} />
                     <WeatherDetailsTable data={data}/>
-                </div>
+                </WeatherDetailsWrapper>
         )
 
     } else {

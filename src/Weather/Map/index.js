@@ -9,7 +9,7 @@ class MyMap extends Component {
         const { position } = this.props
 
         return (
-            <Map style={{height: '500px'}} center={position} zoom={8}>
+            <Map style={{height: '450px'}} center={position} zoom={8}>
                 <TileLayer
                     attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

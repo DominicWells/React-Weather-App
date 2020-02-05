@@ -7,10 +7,11 @@ import WeatherContainer from './Weather/WeatherContainer'
 import Footer from './Footer'
 
 const AppWrapper = styled.div`
-    background-color: grey;
-    height: 100vh;
+    background-color: white;
+    width: 100%;
     padding: 0;
     margin: 0;
+    height: 100vh;
 `;
 
 const App = () => {

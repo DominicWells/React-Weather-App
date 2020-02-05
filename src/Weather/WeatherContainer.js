@@ -5,16 +5,17 @@ import fetchWeatherCity from '../API/fetchWeatherCity'
 import WeatherDetails from './WeatherDetails'
 
 const WeatherContainerWrapper = styled.div`
-    height: 90%;
     background-color: white;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
 `;
 
 const Input = styled.input`
-    
-
+    border-radius: 25px;
+    background-color: #fff;
+    padding: 3px;
 `;
 
 const Form = styled.form`
@@ -23,8 +24,7 @@ const Form = styled.form`
 
 const Error = styled.div`
     background-color: pink;
-    display: flex;
-    justify-content: center;
+    border-radius: 25px;
 `;
 
 class WeatherContainer extends Component {
@@ -34,7 +34,8 @@ class WeatherContainer extends Component {
         this.state = {
             inputValue: '',
             error: '',
-            data: []
+            data: [],
+            unit: "metric"
         }
     }
 
@@ -55,7 +56,7 @@ class WeatherContainer extends Component {
             fetchWeatherCity(inputValue)
                 .then(res => {
                     this.setState( {
-                        data: res.data,
+                        data: this.convertData(res.data, this.state.unit),
                         inputValue: ''
                     })
                 })
@@ -71,6 +72,63 @@ class WeatherContainer extends Component {
         }
     }
 
+    convertData = (data, unit) => {
+        /*
+            Temperature is initially Kelvin. We convert it to Fahrenheit and Celcius.
+        */
+
+        let temperature, pressure
+
+        /*
+            Pressure is initially Mb, so use that measurement and 
+            convert it to Hectopascals.
+        */
+
+        // convert visibility - 
+        //const visibility = data.visibility
+
+        // convert humidity - 
+        //const humidity = data.main.humidity
+
+        if (unit === "metric")
+        {
+            // convert temperature - Kelvin to Celcius
+            temperature = data.main.temp - 273.15
+
+            // stock millibar pressure is already converted
+            pressure = data.main.pressure
+
+        } else if (unit === "imperial")
+        {
+            // convert temperature - Celcius to Fahrenheit
+            temperature = (data.main.temp * 9/5) + 32
+
+            // convert pressure - millibars to Inches Hg
+            pressure = data.main.pressure * 0.029530
+        }
+
+        data.main.temp = temperature
+        data.main.pressure = pressure
+
+        return data
+    }
+
+    toggleUnit = data => {
+
+        let unit
+
+        if (this.state.unit === "imperial")
+            unit = "metric"
+        else
+            unit = "imperial"
+
+        this.setState({
+            unit: unit,
+            data: this.convertData(data, unit)
+        })
+
+    }
+
     render() {
 
         const { inputValue, data , error } = this.state
@@ -78,6 +136,7 @@ class WeatherContainer extends Component {
 
         return (
             <WeatherContainerWrapper>
+                <h1>React Weather App</h1>
                 <Form onSubmit={handleSubmit}>
                     <Error>{error || ''}</Error>
                     <Input
@@ -91,9 +150,7 @@ class WeatherContainer extends Component {
                         value='Submit'
                     />
                 </Form>
-                {data &&
-                    <WeatherDetails data={data}/>
-                }
+                <WeatherDetails data={data} toggleUnit={this.toggleUnit}/>
             </WeatherContainerWrapper>
         )
     }

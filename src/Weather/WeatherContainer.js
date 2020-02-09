@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
+import fetchWeatherCoOrdinates from '../API/fetchWeatherCoOrdinates'
+import handleAPIResponse from '../API/handleAPIResponse'
 import fetchWeatherCity from '../API/fetchWeatherCity'
 import WeatherDetails from './WeatherDetails'
 
@@ -56,7 +58,7 @@ class WeatherContainer extends Component {
             fetchWeatherCity(inputValue)
                 .then(res => {
                     this.setState( {
-                        data: this.convertData(res.data, this.state.unit),
+                        data: handleAPIResponse(res.data),
                         inputValue: ''
                     })
                 })
@@ -72,10 +74,28 @@ class WeatherContainer extends Component {
         }
     }
 
+    handleChangePosition = ({lat, lng}) => {
+        //if (lat.length > 0 && lng.length > 0)
+            //do a fetch to the API!
+            fetchWeatherCoOrdinates(lat, lng)
+            .then(res => {
+                this.setState({
+                    data: handleAPIResponse(res.data)
+                })
+            })
+            .catch(err => {
+                this.setState({
+                    error: 'something went wrong!'
+                })
+            })
+        //else {
+        //   this.setState({
+        //       error: 'invalid co-ordinates!'
+        //   })
+       // }
+    }
+
     convertData = (data, unit) => {
-        /*
-            Temperature is initially Kelvin. We convert it to Fahrenheit and Celcius.
-        */
 
         let temperature, pressure
 
@@ -92,19 +112,20 @@ class WeatherContainer extends Component {
 
         if (unit === "metric")
         {
-            // convert temperature - Kelvin to Celcius
-            temperature = data.main.temp - 273.15
+            // convert temperature - Fahrenheit to Celcius
+            temperature = Math.round((((data.main.temp - 32) * 5/9) + Number.EPSILON) * 100) / 100
 
             // stock millibar pressure is already converted
-            pressure = data.main.pressure
+            pressure = Math.round(((data.main.pressure * 33.8639) + 32 + Number.EPSILON) * 100) / 100
 
         } else if (unit === "imperial")
         {
             // convert temperature - Celcius to Fahrenheit
-            temperature = (data.main.temp * 9/5) + 32
+            temperature = Math.round(((data.main.temp * 9/5) + 32 + Number.EPSILON) * 100) / 100
+
 
             // convert pressure - millibars to Inches Hg
-            pressure = data.main.pressure * 0.029530
+            pressure = Math.round((data.main.pressure * 0.029530 + 32 + Number.EPSILON) * 100) / 100
         }
 
         data.main.temp = temperature
@@ -150,7 +171,7 @@ class WeatherContainer extends Component {
                         value='Submit'
                     />
                 </Form>
-                <WeatherDetails data={data} toggleUnit={this.toggleUnit}/>
+                <WeatherDetails data={data} toggleUnit={this.toggleUnit} handleChangePosition={this.handleChangePosition}/>
             </WeatherContainerWrapper>
         )
     }

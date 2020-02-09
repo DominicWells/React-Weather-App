@@ -15,7 +15,7 @@ const WeatherDetailsWrapper = styled.div`
     // align-items: center;
 `;
 
-const WeatherDetails = ({ data, toggleUnit }) => {
+const WeatherDetails = ({ data, toggleUnit, handleChangePosition }) => {
 
     if (Object.entries(data).length !== 0) {
 
@@ -26,7 +26,7 @@ const WeatherDetails = ({ data, toggleUnit }) => {
                 <WeatherDetailsWrapper>
                     <img width={100} height={100} alt='weather-icon' src={`https://api.openweathermap.org/img/w/${icon}.png`} />
                     <WeatherDesc weather={data.weather} location={data.name} />
-                    <MyMap position={position} />
+                    <MyMap position={position} handleChangePosition={handleChangePosition} />
                     <WeatherDetailsTable data={data} toggleUnit={toggleUnit} />
                 </WeatherDetailsWrapper>
         )

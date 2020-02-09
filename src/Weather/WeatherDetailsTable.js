@@ -1,7 +1,7 @@
 import React from 'react'
 
 const WeatherDetailsTable = ({ data, toggleUnit }) => {
-    console.log(data)
+    
     return (
         <div>
         <button onClick={() => toggleUnit(data)}>toggle Imperial/Metric</button>

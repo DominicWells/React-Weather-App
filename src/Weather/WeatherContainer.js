@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import 'pure-react-carousel/dist/react-carousel.es.css';
 
 import fetchWeatherCoOrdinates from '../API/fetchWeatherCoOrdinates'
 import handleAPIResponse from '../API/handleAPIResponse'
@@ -171,7 +173,21 @@ class WeatherContainer extends Component {
                         value='Submit'
                     />
                 </Form>
-                <WeatherDetails data={data} toggleUnit={this.toggleUnit} handleChangePosition={this.handleChangePosition}/>
+                <CarouselProvider totalSlides={3} naturalSlideHeight={800} naturalSlideWidth={800} dragEnabled={false}> 
+                    <Slider style={{width: '800px'}}>
+                        <Slide index={0}>
+                            <div>slide 1</div>
+                        </Slide>
+                        <Slide index={1}>
+                            <WeatherDetails data={data} toggleUnit={this.toggleUnit} handleChangePosition={this.handleChangePosition}/>
+                        </Slide>
+                        <Slide index={2}>
+                            <div>slide 2</div>
+                        </Slide>
+                    </Slider>
+                    <ButtonBack>Back</ButtonBack>
+                    <ButtonNext>Next</ButtonNext>
+                </CarouselProvider>
             </WeatherContainerWrapper>
         )
     }

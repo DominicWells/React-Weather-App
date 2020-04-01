@@ -6,10 +6,8 @@ import WeatherDesc from './WeatherDesc'
 import WeatherDetailsTable from './WeatherDetailsTable'
 
 const WeatherDetailsWrapper = styled.div`
-    width: 75%;
     padding: 20px;
     background-color: #93b2c4;
-    height: 80%;
     // display: flex;
     // flex-direction: column;
     // align-items: center;

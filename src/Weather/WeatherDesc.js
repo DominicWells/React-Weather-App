@@ -1,17 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const WeatherDescWrapper = styled.div`
-    padding: 10px;
+const LocationHeader = styled.h1`
+    font-size: 12px;
+    margin: 5px 0;
 `;
 
 const WeatherDesc = ({ weather, location }) => {
     return (
-        <WeatherDescWrapper>
-            <h1>{location}</h1>
+        <React.Fragment>
+            <LocationHeader>{location}</LocationHeader>
             <span><b>{weather[0].main}</b></span>
             <span>({weather[0].description})</span>
-        </WeatherDescWrapper>
+        </React.Fragment>
+        
     )
 }
 

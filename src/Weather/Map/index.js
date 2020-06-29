@@ -34,7 +34,6 @@ class MyMap extends Component {
         const { toggleDraggable, updatePosition, refMarker } = this
         const { zoom, draggable } = this.state
         const { position, marker } = this.props
-        
         return (
             <React.Fragment>
                 <Map style={{height: '450px'}} center={position} zoom={zoom}>

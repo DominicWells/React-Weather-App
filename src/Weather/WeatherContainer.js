@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
-import 'pure-react-carousel/dist/react-carousel.es.css';
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel'
+import 'pure-react-carousel/dist/react-carousel.es.css'
 
 import fetchWeatherCoOrdinates from '../API/fetchWeatherCoOrdinates'
 import handleAPIResponse from '../API/handleAPIResponse'
 import fetchWeatherCity from '../API/fetchWeatherCity'
 import WeatherDetails from './WeatherDetails'
+import EmptyWeatherDetails from '../Components/Layout/EmptyWeatherDetails'
+import GeoLocationPrompt from '../Components/Layout/GeoLocationPrompt'
 
 const WeatherContainerWrapper = styled.div`
     background-color: white;
@@ -31,16 +33,38 @@ const Error = styled.div`
     border-radius: 25px;
 `;
 
+const SlideButtonWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+`;
+
 class WeatherContainer extends Component {
     constructor() {
         super()
 
         this.state = {
             inputValue: '',
-            error: '',
-            data: [],
-            unit: "metric"
+            error: null,
+            data: false,
+            unit: "metric",
+            geoLocation: {}
         }
+    }
+
+    componentDidMount() {
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                this.setState({
+                    geoLocation: { position: [pos.coords.latitude, pos.coords.longitude], code: null, message: null }
+                })
+            },
+            err => {
+               this.setState({
+                   geoLocation: { position: [51.5, 0.1] ,code: err.code, message: err.message }
+               })
+            },
+             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        )
     }
 
     handleChange = e => {
@@ -77,7 +101,6 @@ class WeatherContainer extends Component {
     }
 
     handleChangePosition = ({lat, lng}) => {
-        //if (lat.length > 0 && lng.length > 0)
             //do a fetch to the API!
             fetchWeatherCoOrdinates(lat, lng)
             .then(res => {
@@ -90,11 +113,6 @@ class WeatherContainer extends Component {
                     error: 'something went wrong!'
                 })
             })
-        //else {
-        //   this.setState({
-        //       error: 'invalid co-ordinates!'
-        //   })
-       // }
     }
 
     convertData = (data, unit) => {
@@ -105,12 +123,6 @@ class WeatherContainer extends Component {
             Pressure is initially Mb, so use that measurement and 
             convert it to Hectopascals.
         */
-
-        // convert visibility - 
-        //const visibility = data.visibility
-
-        // convert humidity - 
-        //const humidity = data.main.humidity
 
         if (unit === "metric")
         {
@@ -154,7 +166,7 @@ class WeatherContainer extends Component {
 
     render() {
 
-        const { inputValue, data , error } = this.state
+        const { inputValue, data , error, geoLocation } = this.state
         const { handleSubmit, handleChange } = this
 
         return (
@@ -173,21 +185,27 @@ class WeatherContainer extends Component {
                         value='Submit'
                     />
                 </Form>
-                <CarouselProvider totalSlides={3} naturalSlideHeight={800} naturalSlideWidth={800} dragEnabled={false}> 
+
+                {(data) ?
+                    <CarouselProvider totalSlides={3} naturalSlideHeight={800} naturalSlideWidth={800} dragEnabled={false}> 
                     <Slider style={{width: '800px'}}>
                         <Slide index={0}>
-                            <div>slide 1</div>
+                            <WeatherDetails data={data} toggleUnit={this.toggleUnit} handleChangePosition={this.handleChangePosition}/>
                         </Slide>
                         <Slide index={1}>
-                            <WeatherDetails data={data} toggleUnit={this.toggleUnit} handleChangePosition={this.handleChangePosition}/>
+                            <div>slide 1</div>
                         </Slide>
                         <Slide index={2}>
                             <div>slide 2</div>
                         </Slide>
                     </Slider>
-                    <ButtonBack>Back</ButtonBack>
-                    <ButtonNext>Next</ButtonNext>
+                    <SlideButtonWrapper>
+                        <ButtonBack>Back</ButtonBack>
+                        <ButtonNext>Next</ButtonNext>
+                    </SlideButtonWrapper>
                 </CarouselProvider>
+                : <EmptyWeatherDetails geoLocation={geoLocation} handleChangePosition={this.handleChangePosition}/>}
+                <GeoLocationPrompt geoLocation={geoLocation}/>
             </WeatherContainerWrapper>
         )
     }

@@ -4,7 +4,6 @@ const WeatherDetailsTable = ({ data, toggleUnit }) => {
     
     return (
         <div>
-        <button onClick={() => toggleUnit(data)}>toggle Imperial/Metric</button>
             <div>
                 Temperature: {data.main.temp}
             </div>
@@ -17,6 +16,7 @@ const WeatherDetailsTable = ({ data, toggleUnit }) => {
             <div>
                 Visibility: {data.visibility}
             </div>
+            <button onClick={() => toggleUnit(data)}>toggle Imperial/Metric</button>
         </div>
     )
 }

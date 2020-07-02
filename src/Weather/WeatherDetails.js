@@ -7,7 +7,6 @@ import WeatherDetailsTable from './WeatherDetailsTable'
 
 const WeatherDetailsWrapper = styled.div`
     padding: 20px;
-    background-color: #93b2c4;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,7 +14,6 @@ const WeatherDetailsWrapper = styled.div`
 
 const MapWrapper = styled.div`
     padding: 0 20px;
-    background-color: #93b2c4;
 `;
 
 const WeatherDetails = ({ data, toggleUnit, handleChangePosition }) => {

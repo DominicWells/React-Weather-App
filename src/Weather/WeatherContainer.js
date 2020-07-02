@@ -7,6 +7,7 @@ import fetchWeatherCoOrdinates from '../API/fetchWeatherCoOrdinates'
 import handleAPIResponse from '../API/handleAPIResponse'
 import fetchWeatherCity from '../API/fetchWeatherCity'
 import WeatherDetails from './WeatherDetails'
+import ForecastContainer from './ForecastContainer'
 import EmptyWeatherDetails from '../Components/Layout/EmptyWeatherDetails'
 import GeoLocationPrompt from '../Components/Layout/GeoLocationPrompt'
 
@@ -49,6 +50,8 @@ class WeatherContainer extends Component {
             unit: "metric",
             geoLocation: {}
         }
+
+        this.position = [51.5, 0.1]
     }
 
     componentDidMount() {
@@ -60,7 +63,7 @@ class WeatherContainer extends Component {
             },
             err => {
                this.setState({
-                   geoLocation: { position: [51.5, 0.1] ,code: err.code, message: err.message }
+                   geoLocation: { position: this.position ,code: err.code, message: err.message }
                })
             },
              { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
@@ -161,7 +164,6 @@ class WeatherContainer extends Component {
             unit: unit,
             data: this.convertData(data, unit)
         })
-
     }
 
     render() {
@@ -176,7 +178,7 @@ class WeatherContainer extends Component {
                     <Error>{error || ''}</Error>
                     <Input
                         type='text'
-                        placeholder='search for a city here...'
+                        placeholder='search for a location here...'
                         value={inputValue}
                         onChange={handleChange}
                     />
@@ -185,27 +187,26 @@ class WeatherContainer extends Component {
                         value='Submit'
                     />
                 </Form>
-
+                <GeoLocationPrompt geoLocation={geoLocation}/>
                 {(data) ?
                     <CarouselProvider totalSlides={3} naturalSlideHeight={800} naturalSlideWidth={800} dragEnabled={false}> 
-                    <Slider style={{width: '800px'}}>
-                        <Slide index={0}>
-                            <WeatherDetails data={data} toggleUnit={this.toggleUnit} handleChangePosition={this.handleChangePosition}/>
-                        </Slide>
-                        <Slide index={1}>
-                            <div>slide 1</div>
-                        </Slide>
-                        <Slide index={2}>
-                            <div>slide 2</div>
-                        </Slide>
-                    </Slider>
-                    <SlideButtonWrapper>
-                        <ButtonBack>Back</ButtonBack>
-                        <ButtonNext>Next</ButtonNext>
-                    </SlideButtonWrapper>
-                </CarouselProvider>
+                        <Slider style={{width: '800px'}}>
+                            <Slide index={0}>
+                                <WeatherDetails data={data} toggleUnit={this.toggleUnit} handleChangePosition={this.handleChangePosition}/>
+                            </Slide>
+                            <Slide index={1}>
+                                <ForecastContainer data={data}/>
+                            </Slide>
+                            <Slide index={2}>
+                                <div>slide 2</div>
+                            </Slide>
+                        </Slider>
+                        <SlideButtonWrapper>
+                            <ButtonBack>Back</ButtonBack>
+                            <ButtonNext>Next</ButtonNext>
+                        </SlideButtonWrapper>
+                    </CarouselProvider>
                 : <EmptyWeatherDetails geoLocation={geoLocation} handleChangePosition={this.handleChangePosition}/>}
-                <GeoLocationPrompt geoLocation={geoLocation}/>
             </WeatherContainerWrapper>
         )
     }

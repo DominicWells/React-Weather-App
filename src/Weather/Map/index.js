@@ -14,6 +14,7 @@ class MyMap extends Component {
     }
 
     toggleDraggable = () => {
+        
         this.setState({
             draggable: !this.state.draggable
         })
@@ -34,24 +35,28 @@ class MyMap extends Component {
         const { toggleDraggable, updatePosition, refMarker } = this
         const { zoom, draggable } = this.state
         const { position, marker } = this.props
+        
         return (
             <React.Fragment>
-                <Map style={{height: '450px'}} center={position} zoom={zoom}>
+                <Map style={{height: '450px'}} center={position} zoom={zoom} >
                     <TileLayer
                         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker 
+                    <Marker
                       ref={refMarker}
                       position={position}
                       draggable={draggable}
                       marker={marker}
                       onDragend={updatePosition}
+                      onClick={toggleDraggable}
                     >
                         <Popup>
+                        {this.state.draggable && 
                             <span onClick={toggleDraggable}>
-                                {this.state.draggable ? 'DRAG MARKER' : 'MARKER FIXED'}
+                                drag the marker to a location of your choice.
                             </span>
+                        }
                         </Popup>
                     </Marker>
                 </Map>

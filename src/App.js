@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 // Components
 import Header from './Header'
-import WeatherContainer from './Weather/WeatherContainer'
+import Content from './Content'
 import Footer from './Footer'
 
 const AppWrapper = styled.div`
@@ -18,7 +18,7 @@ const App = () => {
   return (
     <AppWrapper>
       <Header />
-      <WeatherContainer />
+      <Content />
       <Footer />
     </AppWrapper>
   )

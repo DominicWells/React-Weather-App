@@ -16,7 +16,7 @@ const MapWrapper = styled.div`
     padding: 0 20px;
 `;
 
-const WeatherDetails = ({ data, toggleUnit, handleChangePosition }) => {
+const WeatherDetails = ({ data, handleChangePosition }) => {
 
     if (Object.entries(data).length !== 0) {
 
@@ -33,7 +33,7 @@ const WeatherDetails = ({ data, toggleUnit, handleChangePosition }) => {
                     <MyMap position={position} handleChangePosition={handleChangePosition} />
                 </MapWrapper>
                 <WeatherDetailsWrapper>
-                    <WeatherDetailsTable data={data} toggleUnit={toggleUnit} />
+                    <WeatherDetailsTable data={data} />
                 </WeatherDetailsWrapper>
             </React.Fragment>
         )

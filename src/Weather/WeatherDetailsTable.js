@@ -1,6 +1,6 @@
 import React from 'react'
 
-const WeatherDetailsTable = ({ data, toggleUnit }) => {
+const WeatherDetailsTable = ({data}) => {
     
     return (
         <div>
@@ -16,7 +16,6 @@ const WeatherDetailsTable = ({ data, toggleUnit }) => {
             <div>
                 Visibility: {data.visibility}
             </div>
-            <button onClick={() => toggleUnit(data)}>toggle Imperial/Metric</button>
         </div>
     )
 }

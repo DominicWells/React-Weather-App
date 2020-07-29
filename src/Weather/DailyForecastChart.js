@@ -19,19 +19,18 @@ const DailyForecastChart = ({data, handleGraphChange, yAxis}) => {
     })
 
     const yAxisLabel = dailyGraphDataKeys()[yAxis]
-console.log(data)
+    console.log(data)
     return (
         <React.Fragment>
             <h2>7 Day Weather Forecast</h2>     
             <LineChart width={650} height={300} data={data} margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-                    <XAxis dataKey="name"/>
-                    <YAxis dataKey={yAxis} label={{value: yAxisLabel, angle: -90, position: "left"}}/>
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <Tooltip/>
-                    <Legend />
-                    <Line type="monotone" dataKey={yAxis} stroke="#82ca9d" />
+                <XAxis dataKey="name" stroke="###"/>
+                <YAxis dataKey={yAxis} label={{value: yAxisLabel, angle: -90, position: "left"}} stroke="###"/>
+                <CartesianGrid strokeDasharray="3 3"/>
+                <Tooltip/>
+                <Legend />
+                <Line type="monotone" dataKey={yAxis} stroke="#82ca9d" />
             </LineChart>
-    
         <select onChange={handleGraphChange}>    
             {filterGraph.map((cur, ind) => {
                 return <option key={ind} value={cur}>{cur}</option>

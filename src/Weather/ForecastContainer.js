@@ -30,7 +30,7 @@ class ForecastContainer extends Component {
     }
 
     componentDidMount() {
-        fetchForecast(this.props.data.coord)
+        fetchForecast(this.props.data.coord, this.props.unit)
             .then(res => {
                 console.log(res)
                 this.setState({
@@ -68,7 +68,7 @@ class ForecastContainer extends Component {
             
             const { dailyForecastGraphOption } = this.state
 
-            return { name: moment().add(ind++, 'day').format('dddd') ,  [dailyForecastGraphOption]: (obj[dailyForecastGraphOption]) ? obj[dailyForecastGraphOption] : 0}
+            return { name: moment().add(ind++, 'day').format('dddd') ,  [dailyForecastGraphOption]: (obj[dailyForecastGraphOption] && typeof obj[dailyForecastGraphOption] !== 'object') ? obj[dailyForecastGraphOption] : 0}
         })
 
         return graphData
@@ -80,7 +80,7 @@ class ForecastContainer extends Component {
 
             const { hourlyForecastGraphOption } = this.state
 
-            return { name: moment().add(ind++, 'hour').format('hh:mm a') ,  [hourlyForecastGraphOption]: (obj[hourlyForecastGraphOption]) ? obj[hourlyForecastGraphOption] : 0}
+            return { name: moment().add(ind++, 'hour').format('hh:mm a') ,  [hourlyForecastGraphOption]: (obj[hourlyForecastGraphOption] && typeof obj[hourlyForecastGraphOption] !== 'object') ? obj[hourlyForecastGraphOption] : 0}
          })
 
         return graphData

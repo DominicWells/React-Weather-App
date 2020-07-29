@@ -19,13 +19,13 @@ const HourlyForecastChart = ({data, handleGraphChange, yAxis}) => {
     })
 
     const yAxisLabel = hourlyGraphDataKeys()[yAxis]
-
+    console.log(data)
      return (
         <React.Fragment>
             <h2>48 Hour Weather Forecast</h2>   
                 <LineChart width={600} height={300} data={data} margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-                    <XAxis dataKey="name"/>
-                    <YAxis dataKey={yAxis} label={{value: yAxisLabel, angle: -90, position: "left"}}/>
+                    <XAxis dataKey="name" stroke="###"/>
+                    <YAxis dataKey={yAxis} label={{value: yAxisLabel, angle: -90, position: "left"}} stroke="###"/>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <Tooltip/>
                     <Legend />

@@ -82,15 +82,14 @@ class WeatherContainer extends Component {
 
         e.preventDefault()
 
-        const { inputValue } = this.state
+        const { inputValue, unit } = this.state
 
         if (inputValue.length > 0) {
             // do a fetch to the API!
-            fetchWeatherCity(inputValue)
+            fetchWeatherCity(inputValue, unit)
                 .then(res => {
                     this.setState( {
-                        data: handleAPIResponse(res.data),
-                        inputValue: ''
+                        data: handleAPIResponse(res.data)
                     })
                 })
                 .catch(err => {
@@ -120,40 +119,7 @@ class WeatherContainer extends Component {
             })
     }
 
-    convertData = (data, unit) => {
-
-        let temperature, pressure
-
-        /*
-            Pressure is initially Mb, so use that measurement and 
-            convert it to Hectopascals.
-        */
-
-        if (unit === "metric")
-        {
-            // convert temperature - Fahrenheit to Celcius
-            temperature = Math.round((((data.main.temp - 32) * 5/9) + Number.EPSILON) * 100) / 100
-
-            // stock millibar pressure is already converted
-            pressure = Math.round(((data.main.pressure * 33.8639) + 32 + Number.EPSILON) * 100) / 100
-
-        } else if (unit === "imperial")
-        {
-            // convert temperature - Celcius to Fahrenheit
-            temperature = Math.round(((data.main.temp * 9/5) + 32 + Number.EPSILON) * 100) / 100
-
-
-            // convert pressure - millibars to Inches Hg
-            pressure = Math.round((data.main.pressure * 0.029530 + 32 + Number.EPSILON) * 100) / 100
-        }
-
-        data.main.temp = temperature
-        data.main.pressure = pressure
-
-        return data
-    }
-
-    toggleUnit = data => {
+    toggleUnit = () => {
 
         let unit
 
@@ -161,16 +127,25 @@ class WeatherContainer extends Component {
             unit = "metric"
         else
             unit = "imperial"
-
-        this.setState({
-            unit: unit,
-            data: this.convertData(data, unit)
-        })
+    
+        fetchWeatherCity(this.state.inputValue, unit)
+            .then(res => {
+                this.setState( {
+                    data: handleAPIResponse(res.data),
+                    unit: unit
+                })
+            })
+            .catch(err => {
+                this.setState({
+                    error: 'error converting the data!'
+                })
+            })
+        
     }
 
     render() {
 
-        const { inputValue, data , error, geoLocation } = this.state
+        const { inputValue, data , error, geoLocation, unit } = this.state
         const { handleSubmit, handleChange } = this
         
         let imageURL = `/images/default.jpg`
@@ -198,23 +173,27 @@ class WeatherContainer extends Component {
                 </Form>
                 <GeoLocationPrompt geoLocation={geoLocation}/>
                 {(data) ?
-                    <CarouselProvider totalSlides={3} naturalSlideHeight={800} naturalSlideWidth={800} dragEnabled={false}> 
-                        <Slider style={{width: '800px'}}>
-                            <Slide index={0}>
-                                <WeatherDetails data={data} toggleUnit={this.toggleUnit} handleChangePosition={this.handleChangePosition}/>
-                            </Slide>
-                            <Slide index={1}>
-                                <ForecastContainer data={data}/>
-                            </Slide>
-                            <Slide index={2}>
-                                <div>slide 2</div>
-                            </Slide>
-                        </Slider>
-                        <SlideButtonWrapper>
-                            <ButtonBack>Back</ButtonBack>
-                            <ButtonNext>Next</ButtonNext>
-                        </SlideButtonWrapper>
-                    </CarouselProvider>
+                    <React.Fragment>
+                        <CarouselProvider totalSlides={3} naturalSlideHeight={800} naturalSlideWidth={800} dragEnabled={false}> 
+                            <Slider style={{width: '800px'}}>
+                                <Slide index={0}>
+                                    <WeatherDetails data={data} handleChangePosition={this.handleChangePosition}/>
+                                </Slide>
+                                <Slide index={1}>
+                                    <ForecastContainer data={data} unit={unit}/>
+                                </Slide>
+                                <Slide index={2}>
+                                    <div>slide 2</div>
+                                </Slide>
+                            </Slider>
+                            <SlideButtonWrapper>
+                                <ButtonBack>Back</ButtonBack>
+                                <ButtonNext>Next</ButtonNext>
+                            </SlideButtonWrapper>
+                        </CarouselProvider>
+                        <div>Current Unit: {unit}</div>
+                        <button onClick={this.toggleUnit}>Change Units</button>
+                    </React.Fragment>
                 : <EmptyWeatherDetails geoLocation={geoLocation} handleChangePosition={this.handleChangePosition}/>}
             </WeatherContainerWrapper>
         )

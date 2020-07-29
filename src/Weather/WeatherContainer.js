@@ -12,8 +12,10 @@ import EmptyWeatherDetails from '../Components/Layout/EmptyWeatherDetails'
 import GeoLocationPrompt from '../Components/Layout/GeoLocationPrompt'
 
 const WeatherContainerWrapper = styled.div`
-    background-color: white;
-    height: 100%;
+    background-image: url(${(props) => props.imageURL});
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 1000px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -170,9 +172,16 @@ class WeatherContainer extends Component {
 
         const { inputValue, data , error, geoLocation } = this.state
         const { handleSubmit, handleChange } = this
+        
+        let imageURL = `/images/default.jpg`
+
+        if (Object.entries(data).length !== 0) {
+           imageURL = `/images/${data.weather[0].main}.jpg`
+
+        } 
 
         return (
-            <WeatherContainerWrapper>
+            <WeatherContainerWrapper imageURL={imageURL}>
                 <h1>React Weather App</h1>
                 <Form onSubmit={handleSubmit}>
                     <Error>{error || ''}</Error>

@@ -7,19 +7,19 @@ import Content from './Content'
 import Footer from './Footer'
 
 const AppWrapper = styled.div`
-    background-color: white;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    height: 100vh;
+    // background-color: white;
+    // width: 100%;
+    // padding: 0;
+    // margin: 0;
+    height: 100%;
 `;
 
 const App = () => {
   return (
     <AppWrapper>
-      <Header />
+      {/* <Header /> */}
       <Content />
-      <Footer />
+      {/* <Footer /> */}
     </AppWrapper>
   )
 }

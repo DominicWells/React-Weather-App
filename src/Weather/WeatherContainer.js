@@ -6,39 +6,19 @@ import 'pure-react-carousel/dist/react-carousel.es.css'
 import fetchWeatherCoOrdinates from '../API/fetchWeatherCoOrdinates'
 import handleAPIResponse from '../API/handleAPIResponse'
 import fetchWeatherCity from '../API/fetchWeatherCity'
+import SearchForm from '../Weather/SearchForm'
 import WeatherDetails from './WeatherDetails'
 import ForecastContainer from './ForecastContainer'
 import EmptyWeatherDetails from '../Components/Layout/EmptyWeatherDetails'
 import GeoLocationPrompt from '../Components/Layout/GeoLocationPrompt'
+import H1 from '../Components/Layout/Titles/H1'
+import ToggleButton from '../Components/Layout/Buttons/ToggleButton'
+import SwitchCarouselSlideButton from '../Components/Layout/Buttons/SwitchCarouselSlideButton'
 
 const WeatherContainerWrapper = styled.div`
-    background-image: url(${(props) => props.imageURL});
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 1000px;
     display: flex;
     flex-direction: column;
     align-items: center;
-`;
-
-const Input = styled.input`
-    border-radius: 25px;
-    background-color: #fff;
-    padding: 3px;
-`;
-
-const Form = styled.form`
-    margin: 10px;
-`;
-
-const Error = styled.div`
-    background-color: pink;
-    border-radius: 25px;
-`;
-
-const SlideButtonWrapper = styled.div`
-    display: flex;
-    justify-content: center;
 `;
 
 class WeatherContainer extends Component {
@@ -47,13 +27,25 @@ class WeatherContainer extends Component {
 
         this.state = {
             inputValue: '',
-            error: null,
+            error: false,
             data: false,
             unit: "metric",
             geoLocation: {}
         }
 
+        // default co-ordinates - London
         this.position = [51.5, 0.1]
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.data !== this.state.data && prevState.unit === this.state.unit) {
+            let imageURL
+            if (Object.entries(this.state.data).length !== 0) {
+                imageURL = `/images/${this.state.data.weather[0].main}.jpg`
+            } 
+
+            document.body.style = `background-image: url(${imageURL});`
+        }
     }
 
     componentDidMount() {
@@ -94,7 +86,7 @@ class WeatherContainer extends Component {
                 })
                 .catch(err => {
                     this.setState({
-                        error: 'Something went wrong on our side! ' + err
+                        error: err
                     })
                 })
         } else {
@@ -147,33 +139,15 @@ class WeatherContainer extends Component {
 
         const { inputValue, data , error, geoLocation, unit } = this.state
         const { handleSubmit, handleChange } = this
-        
-        let imageURL = `/images/default.jpg`
-
-        if (Object.entries(data).length !== 0) {
-           imageURL = `/images/${data.weather[0].main}.jpg`
-
-        } 
 
         return (
-            <WeatherContainerWrapper imageURL={imageURL}>
-                <h1>React Weather App</h1>
-                <Form onSubmit={handleSubmit}>
-                    <Error>{error || ''}</Error>
-                    <Input
-                        type='text'
-                        placeholder='search for a location here...'
-                        value={inputValue}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        type='submit'
-                        value='Submit'
-                    />
-                </Form>
+            <WeatherContainerWrapper>
+                <H1>React Weather App</H1>
+                <SearchForm handleSubmit={handleSubmit} error={error} value={inputValue} handleChange={handleChange} />     
                 <GeoLocationPrompt geoLocation={geoLocation}/>
                 {(data) ?
                     <React.Fragment>
+                        <ToggleButton onClick={this.toggleUnit} unit={unit}>Toggle Unit</ToggleButton>
                         <CarouselProvider totalSlides={3} naturalSlideHeight={800} naturalSlideWidth={800} dragEnabled={false}> 
                             <Slider style={{width: '800px'}}>
                                 <Slide index={0}>
@@ -186,13 +160,8 @@ class WeatherContainer extends Component {
                                     <div>slide 2</div>
                                 </Slide>
                             </Slider>
-                            <SlideButtonWrapper>
-                                <ButtonBack>Back</ButtonBack>
-                                <ButtonNext>Next</ButtonNext>
-                            </SlideButtonWrapper>
+                            <SwitchCarouselSlideButton />
                         </CarouselProvider>
-                        <div>Current Unit: {unit}</div>
-                        <button onClick={this.toggleUnit}>Change Units</button>
                     </React.Fragment>
                 : <EmptyWeatherDetails geoLocation={geoLocation} handleChangePosition={this.handleChangePosition}/>}
             </WeatherContainerWrapper>

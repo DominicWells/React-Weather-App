@@ -19,7 +19,7 @@ const DailyForecastChart = ({data, handleGraphChange, yAxis}) => {
     })
 
     const yAxisLabel = dailyGraphDataKeys()[yAxis]
-    console.log(data)
+
     return (
         <React.Fragment>
             <h2>7 Day Weather Forecast</h2>     

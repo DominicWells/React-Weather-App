@@ -19,7 +19,7 @@ const HourlyForecastChart = ({data, handleGraphChange, yAxis}) => {
     })
 
     const yAxisLabel = hourlyGraphDataKeys()[yAxis]
-    console.log(data)
+
      return (
         <React.Fragment>
             <h2>48 Hour Weather Forecast</h2>   

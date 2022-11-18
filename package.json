@@ -10,7 +10,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-leaflet": "^2.3.0",
-    "react-scripts": "3.0.1",
+    "react-scripts": "5.0.1",
     "recharts": "^1.8.5",
     "styled-components": "^4.3.0"
   },
@@ -38,6 +38,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
-    "@storybook/react": "^5.1.1"
+    "@storybook/react": "^6.5.13"
   }
 }
